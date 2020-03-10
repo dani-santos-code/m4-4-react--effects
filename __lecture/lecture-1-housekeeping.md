@@ -60,7 +60,7 @@ const App = ({ showErrors }) => {
     error = React.useState(null);
   }
 
-  return 'hi';
+  return "hi";
 };
 ```
 
@@ -74,24 +74,24 @@ Fix the following state hooks
 
 ```js
 const Button = ({ type, children }) => {
-  if (type === 'primary') {
-    const [color, setColor] = React.useState('red');
+  const [color, setColor] = React.useState("red");
 
+  if (type === "primary") {
     return (
       <button
         style={{ color }}
         onMouseEnter={() => {
-          setColor('purple');
+          setColor("purple");
         }}
         onMouseLeave={() => {
-          setColor('red');
+          setColor("red");
         }}
       >
         {children}
       </button>
     );
   } else {
-    return <button style={{ backgroundColor: 'purple' }}>{children}</button>;
+    return <button style={{ backgroundColor: "purple" }}>{children}</button>;
   }
 };
 ```

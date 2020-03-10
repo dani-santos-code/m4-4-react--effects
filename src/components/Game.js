@@ -13,15 +13,27 @@ const items = [
 const Game = () => {
   // TODO: Replace this with React state!
   const [numCookies, setNumCookies] = React.useState(100);
-  const purchasedItems = {
+  const [purchasedItems, setPurchasedItems] = React.useState({
     cursor: 0,
     grandma: 0,
     farm: 0
-  };
-  const handleClick = () => {
+  });
+
+  const handleClick = (cost, name) => {
     //TODO
-    console.log("I was clicked");
-    setNumCookies(numCookies + 1);
+    const identifier = name.toLowerCase();
+    let currentValue = purchasedItems[identifier];
+    const updatePurchasedItems = {
+      ...purchasedItems,
+      [identifier]: currentValue + 1
+    };
+    if (numCookies >= cost) {
+      setPurchasedItems(updatePurchasedItems);
+      setNumCookies(numCookies - cost);
+    } else {
+      alert("You have insufficient funds!");
+      return;
+    }
   };
 
   return (

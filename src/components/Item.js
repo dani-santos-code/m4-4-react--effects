@@ -26,7 +26,7 @@ const Item = ({ name, value, cost, numOwned, handleClick }) => {
   return (
     <>
       <Wrapper>
-        <ItemWrapper onClick={handleClick}>
+        <ItemWrapper onClick={() => handleClick(cost, name)}>
           <StyledH2>{name}</StyledH2>
           <StyledCostInfo>
             Cost: {cost} cookie(s). Produces {value} cookie/second

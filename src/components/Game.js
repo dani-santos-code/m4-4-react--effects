@@ -20,6 +20,7 @@ const Game = () => {
     grandma: 0,
     farm: 0
   });
+
   React.useEffect(() => {
     document.title = `🍪${numCookies} cookies - Cookie Clicker Workshop`;
     return () => {
@@ -27,6 +28,17 @@ const Game = () => {
     };
   }, [numCookies]);
 
+  React.useEffect(() => {
+    const handleSpaceClick = e => {
+      if (e.code === "Space") {
+        setNumCookies(numCookies + 1);
+      }
+    };
+    window.addEventListener("keydown", handleSpaceClick);
+    return () => {
+      window.removeEventListener("keydown", handleSpaceClick);
+    };
+  }, [numCookies]);
   const calculateCookiesPerTick = purchasedItems => {
     const cookiesAmount = items.map(({ value, id }) => {
       const numOwned = purchasedItems[id];

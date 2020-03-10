@@ -11,7 +11,7 @@ One way to do this:
 ```js live=true
 const Form = () => {
   React.useEffect(() => {
-    const firstNameInput = document.querySelector('#first-name');
+    const firstNameInput = document.querySelector("#first-name");
 
     firstNameInput.focus();
   }, []);
@@ -98,15 +98,19 @@ Use `useRef`
 
 ```js
 const ConfirmButton = () => {
-  React.useEffect(() => {
-    const btn = document.getElementById('confirm-button');
+    const btn = React.useRef(null);
+    React.useEffect(() => {
+       if(btn) {
+        btn.current.focus();
+      }
+    }, []);
+  };
 
-    if (btn) {
-      btn.focus();
-    }
-  }, []);
-
-  return <button id="confirm-button">Confirm</button>;
+  return (
+    <button ref={btn} id="confirm-button">
+      Confirm
+    </button>
+  );
 };
 ```
 
@@ -115,7 +119,7 @@ const ConfirmButton = () => {
 ```js
 const PasswordInput = ({ focusOnMount }) => {
   React.useEffect(() => {
-    const input = document.querySelector('[data-name=pswrd]');
+    const input = document.querySelector("[data-name=pswrd]");
 
     if (focusOnMount && input) {
       input.focus();
@@ -157,6 +161,10 @@ const ConfirmButton = () => {
 ---
 
 ### Common Gotcha
+
+// A React element is not necessarily a DOM node
+// You can put it on a StyledComponent, though
+// There's a way aroun dit, but it's advanced (forwardRef)
 
 ```js live=true
 const Item = ({ children }) => {

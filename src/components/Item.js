@@ -22,10 +22,18 @@ const StyledH2 = styled.h2``;
 const PurchasedItems = styled.div`
   font-size: 30px;
 `;
-const Item = ({ name, value, cost, numOwned, handleClick }) => {
+const Item = ({ name, value, cost, numOwned, handleClick, isFirstItem }) => {
+  const firstItemRef = React.useRef(null);
+  React.useEffect(() => {
+    if (isFirstItem) {
+      console.log(firstItemRef.current);
+      firstItemRef.current.focus();
+    }
+  }, []);
+
   return (
     <>
-      <Wrapper>
+      <Wrapper tabIndex={0} ref={firstItemRef}>
         <ItemWrapper onClick={() => handleClick(cost, name)}>
           <StyledH2>{name}</StyledH2>
           <StyledCostInfo>

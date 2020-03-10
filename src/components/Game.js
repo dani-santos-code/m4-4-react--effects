@@ -79,7 +79,7 @@ const Game = () => {
           <Total>{numCookies} cookies</Total>
           <strong>{totalCookiesPerSecond}</strong> cookies per second
         </Indicator>
-        <Button onClick={() => setNumCookies(numCookies + 1)}>
+        <Button tabIndex={-1} onClick={() => setNumCookies(numCookies + 1)}>
           <Cookie src={cookieSrc} />
         </Button>
       </GameArea>
@@ -91,6 +91,7 @@ const Game = () => {
           return (
             <Item
               key={`${id}-${i}`}
+              isFirstItem={i === 0}
               name={name}
               cost={cost}
               value={value}

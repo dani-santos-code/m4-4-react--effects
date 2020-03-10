@@ -10,16 +10,22 @@ const items = [
   { id: "grandma", name: "Grandma", cost: 100, value: 10 },
   { id: "farm", name: "Farm", cost: 1000, value: 80 }
 ];
-let totalCookiesPerSecond;
+
+let totalCookiesPerSecond = 0;
 
 const Game = () => {
-  // TODO: Replace this with React state!
   const [numCookies, setNumCookies] = React.useState(100);
   const [purchasedItems, setPurchasedItems] = React.useState({
     cursor: 0,
     grandma: 0,
     farm: 0
   });
+  React.useEffect(() => {
+    document.title = `🍪${numCookies} cookies - Cookie Clicker Workshop`;
+    return () => {
+      document.title = `Cookie Clicker Workshop`;
+    };
+  }, [numCookies]);
 
   const calculateCookiesPerTick = purchasedItems => {
     const cookiesAmount = items.map(({ value, id }) => {
@@ -35,8 +41,6 @@ const Game = () => {
   };
   useInterval(() => {
     const numOfGeneratedCookies = calculateCookiesPerTick(purchasedItems);
-    // Add this number of cookies to the total
-    // numOfGeneratedCookies.forEach(num => setNumCookies(num));
     setNumCookies(numCookies + numOfGeneratedCookies);
   }, 1000);
 

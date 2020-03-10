@@ -3,12 +3,14 @@ import styled from "styled-components";
 
 import Item from "./Item";
 import cookieSrc from "../cookie.svg";
+import useInterval from "../hooks/use-interval.hook";
 
 const items = [
   { id: "cursor", name: "Cursor", cost: 10, value: 1 },
   { id: "grandma", name: "Grandma", cost: 100, value: 10 },
   { id: "farm", name: "Farm", cost: 1000, value: 80 }
 ];
+let totalCookiesPerSecond;
 
 const Game = () => {
   // TODO: Replace this with React state!
@@ -19,8 +21,26 @@ const Game = () => {
     farm: 0
   });
 
+  const calculateCookiesPerTick = purchasedItems => {
+    const cookiesAmount = items.map(({ value, id }) => {
+      const numOwned = purchasedItems[id];
+      return numOwned * value;
+    });
+    totalCookiesPerSecond = cookiesAmount.reduce(
+      (currentValue, incrementor) => {
+        return currentValue + incrementor;
+      }
+    );
+    return totalCookiesPerSecond;
+  };
+  useInterval(() => {
+    const numOfGeneratedCookies = calculateCookiesPerTick(purchasedItems);
+    // Add this number of cookies to the total
+    // numOfGeneratedCookies.forEach(num => setNumCookies(num));
+    setNumCookies(numCookies + numOfGeneratedCookies);
+  }, 1000);
+
   const handleClick = (cost, name) => {
-    //TODO
     const identifier = name.toLowerCase();
     let currentValue = purchasedItems[identifier];
     const updatePurchasedItems = {
@@ -41,8 +61,7 @@ const Game = () => {
       <GameArea>
         <Indicator>
           <Total>{numCookies} cookies</Total>
-          {/* TODO: Calcuate the cookies per second and show it here: */}
-          <strong>0</strong> cookies per second
+          <strong>{totalCookiesPerSecond}</strong> cookies per second
         </Indicator>
         <Button onClick={() => setNumCookies(numCookies + 1)}>
           <Cookie src={cookieSrc} />

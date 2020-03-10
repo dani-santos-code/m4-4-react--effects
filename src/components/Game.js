@@ -1,12 +1,13 @@
-import React from 'react';
-import styled from 'styled-components';
+import React from "react";
+import styled from "styled-components";
 
-import cookieSrc from '../cookie.svg';
+import Item from "./Item";
+import cookieSrc from "../cookie.svg";
 
 const items = [
-  { id: 'cursor', name: 'Cursor', cost: 10, value: 1 },
-  { id: 'grandma', name: 'Grandma', cost: 100, value: 10 },
-  { id: 'farm', name: 'Farm', cost: 1000, value: 80 },
+  { id: "cursor", name: "Cursor", cost: 10, value: 1 },
+  { id: "grandma", name: "Grandma", cost: 100, value: 10 },
+  { id: "farm", name: "Farm", cost: 1000, value: 80 }
 ];
 
 const Game = () => {
@@ -15,7 +16,7 @@ const Game = () => {
   const purchasedItems = {
     cursor: 0,
     grandma: 0,
-    farm: 0,
+    farm: 0
   };
 
   return (
@@ -33,7 +34,18 @@ const Game = () => {
 
       <ItemArea>
         <SectionTitle>Items:</SectionTitle>
-        {/* TODO: Add <Item> instances here, 1 for each item type. */}
+        {items.map(({ name, cost, value, id }, i) => {
+          const quantity = purchasedItems[id];
+          return (
+            <Item
+              key={`${id}-${i}`}
+              name={name}
+              cost={cost}
+              value={value}
+              quantity={quantity}
+            />
+          );
+        })}
       </ItemArea>
     </Wrapper>
   );
@@ -41,17 +53,21 @@ const Game = () => {
 
 const Wrapper = styled.div`
   display: flex;
+  justify-content: center;
   height: 100vh;
+  justify-content: space-around;
 `;
 const GameArea = styled.div`
-  flex: 1;
+  /* flex: 1;*/
   display: grid;
-  place-items: center;
+  align-content: center;
+  align-self: center;
 `;
 const Button = styled.button`
   border: none;
   background: transparent;
   cursor: pointer;
+  margin-top: 100px;
 `;
 
 const Cookie = styled.img`
@@ -64,6 +80,7 @@ const ItemArea = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 400px;
 `;
 
 const SectionTitle = styled.h3`

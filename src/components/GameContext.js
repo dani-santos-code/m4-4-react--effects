@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { items } from "../data";
 import usePersistedState from "../hooks/use-persisted-state.hook";
 
@@ -12,8 +13,6 @@ export const GameProvider = ({ children }) => {
     grandma: 0,
     farm: 0
   });
-
-  console.log(purchasedItems);
 
   const calculateCookiesPerSecond = purchasedItems => {
     const cookiesAmount = items.map(({ value, id }) => {
@@ -42,4 +41,8 @@ export const GameProvider = ({ children }) => {
       {children}
     </GameContext.Provider>
   );
+};
+
+GameProvider.propTypes = {
+  children: PropTypes.string
 };

@@ -8,7 +8,7 @@ import useInterval from "../hooks/use-interval.hook";
 
 import { GameContext } from "./GameContext";
 
-function App(props) {
+function App() {
   const { numCookies, setNumCookies, cookiesPerSecond } = useContext(
     GameContext
   );

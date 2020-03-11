@@ -16,8 +16,8 @@ const items = [
 let totalCookiesPerSecond = 0;
 
 const Game = () => {
-  const initialNumCookies =
-    Number(window.localStorage.getItem("numCookies")) || 0;
+  const initialNumCookies = () =>
+    Number(window.localStorage.getItem("numCookies")) || 1000;
   const [numCookies, setNumCookies] = React.useState(initialNumCookies);
   const [purchasedItems, setPurchasedItems] = React.useState({
     cursor: 0,

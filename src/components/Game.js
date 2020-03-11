@@ -1,25 +1,22 @@
-import React, { createContext } from "react";
+import React, { createContext, useContext } from "react";
 import styled from "styled-components";
+import { GameContext } from "./GameContext";
 
 import cookieSrc from "../cookie.svg";
 import Item from "./Item";
-import useInterval from "../hooks/use-interval.hook";
-import usePersistedState from "../hooks/use-persisted-state.hook";
 
 import { items } from "../data";
 
 export const ItemContext = createContext(null);
 
-let totalCookiesPerSecond = 0;
-
 const Game = () => {
-  const [numCookies, setNumCookies] = usePersistedState(1000, "numCookies");
-
-  const [purchasedItems, setPurchasedItems] = React.useState({
-    cursor: 0,
-    grandma: 0,
-    farm: 0
-  });
+  const {
+    numCookies,
+    setNumCookies,
+    purchasedItems,
+    setPurchasedItems,
+    cookiesPerSecond
+  } = useContext(GameContext);
 
   React.useEffect(() => {
     document.title = `🍪${numCookies} cookies - Cookie Clicker Workshop`;
@@ -39,23 +36,6 @@ const Game = () => {
       window.removeEventListener("keydown", handleSpaceClick);
     };
   }, [numCookies, setNumCookies]);
-
-  const calculateCookiesPerTick = purchasedItems => {
-    const cookiesAmount = items.map(({ value, id }) => {
-      const numOwned = purchasedItems[id];
-      return numOwned * value;
-    });
-    totalCookiesPerSecond = cookiesAmount.reduce(
-      (currentValue, incrementor) => {
-        return currentValue + incrementor;
-      }
-    );
-    return totalCookiesPerSecond;
-  };
-  useInterval(() => {
-    const numOfGeneratedCookies = calculateCookiesPerTick(purchasedItems);
-    setNumCookies(numCookies + numOfGeneratedCookies);
-  }, 1000);
 
   const handleClick = (cost, name) => {
     const identifier = name.toLowerCase();
@@ -78,7 +58,7 @@ const Game = () => {
       <GameArea>
         <Indicator>
           <Total>{numCookies} cookies</Total>
-          <strong>{totalCookiesPerSecond}</strong> cookies per second
+          <strong>{cookiesPerSecond}</strong> cookies per second
         </Indicator>
         <Button onClick={() => setNumCookies(numCookies + 1)}>
           <Cookie src={cookieSrc} />

@@ -1,9 +1,11 @@
-import React from "react";
+import React, { createContext } from "react";
 import styled from "styled-components";
 
 import Item from "./Item";
 import cookieSrc from "../cookie.svg";
 import useInterval from "../hooks/use-interval.hook";
+
+export const ItemContext = createContext(null);
 
 const items = [
   { id: "cursor", name: "Cursor", cost: 10, value: 1 },
@@ -88,16 +90,21 @@ const Game = () => {
         <SectionTitle>Items:</SectionTitle>
         {items.map(({ name, cost, value, id }, i) => {
           const numOwned = purchasedItems[id];
+          const key = `${id}-${i}`;
+          const isFirstItem = () => i === 0;
           return (
-            <Item
-              key={`${id}-${i}`}
-              isFirstItem={i === 0}
-              name={name}
-              cost={cost}
-              value={value}
-              numOwned={numOwned}
-              handleClick={handleClick}
-            />
+            <ItemContext.Provider
+              value={{
+                isFirstItem,
+                name,
+                cost,
+                value,
+                numOwned,
+                handleClick
+              }}
+            >
+              <Item key={key} />
+            </ItemContext.Provider>
           );
         })}
       </ItemArea>

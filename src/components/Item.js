@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { ItemContext } from "./Game";
 
 const Wrapper = styled.div`
   display: flex;
@@ -22,7 +23,16 @@ const StyledH2 = styled.h2``;
 const PurchasedItems = styled.div`
   font-size: 30px;
 `;
-const Item = ({ name, value, cost, numOwned, handleClick, isFirstItem }) => {
+const Item = () => {
+  const {
+    isFirstItem,
+    name,
+    cost,
+    value,
+    numOwned,
+    handleClick
+  } = React.useContext(ItemContext);
+
   const firstItemRef = React.useRef(null);
   React.useEffect(() => {
     if (isFirstItem) {

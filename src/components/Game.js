@@ -1,24 +1,20 @@
 import React, { createContext } from "react";
 import styled from "styled-components";
 
-import Item from "./Item";
 import cookieSrc from "../cookie.svg";
+import Item from "./Item";
 import useInterval from "../hooks/use-interval.hook";
+import usePersistedState from "../hooks/use-persisted-state.hook";
+
+import { items } from "../data";
 
 export const ItemContext = createContext(null);
-
-const items = [
-  { id: "cursor", name: "Cursor", cost: 10, value: 1 },
-  { id: "grandma", name: "Grandma", cost: 100, value: 10 },
-  { id: "farm", name: "Farm", cost: 1000, value: 80 }
-];
 
 let totalCookiesPerSecond = 0;
 
 const Game = () => {
-  const initialNumCookies = () =>
-    Number(window.localStorage.getItem("numCookies")) || 1000;
-  const [numCookies, setNumCookies] = React.useState(initialNumCookies);
+  const [numCookies, setNumCookies] = usePersistedState(1000, "numCookies");
+
   const [purchasedItems, setPurchasedItems] = React.useState({
     cursor: 0,
     grandma: 0,
@@ -33,10 +29,6 @@ const Game = () => {
   }, [numCookies]);
 
   React.useEffect(() => {
-    window.localStorage.setItem("numCookies", numCookies);
-  }, [numCookies]);
-
-  React.useEffect(() => {
     const handleSpaceClick = e => {
       if (e.code === "Space") {
         setNumCookies(numCookies + 1);
@@ -46,7 +38,8 @@ const Game = () => {
     return () => {
       window.removeEventListener("keydown", handleSpaceClick);
     };
-  }, [numCookies]);
+  }, [numCookies, setNumCookies]);
+
   const calculateCookiesPerTick = purchasedItems => {
     const cookiesAmount = items.map(({ value, id }) => {
       const numOwned = purchasedItems[id];

@@ -16,7 +16,9 @@ const items = [
 let totalCookiesPerSecond = 0;
 
 const Game = () => {
-  const [numCookies, setNumCookies] = React.useState(100);
+  const initialNumCookies =
+    Number(window.localStorage.getItem("numCookies")) || 0;
+  const [numCookies, setNumCookies] = React.useState(initialNumCookies);
   const [purchasedItems, setPurchasedItems] = React.useState({
     cursor: 0,
     grandma: 0,
@@ -28,6 +30,10 @@ const Game = () => {
     return () => {
       document.title = `Cookie Clicker Workshop`;
     };
+  }, [numCookies]);
+
+  React.useEffect(() => {
+    window.localStorage.setItem("numCookies", numCookies);
   }, [numCookies]);
 
   React.useEffect(() => {

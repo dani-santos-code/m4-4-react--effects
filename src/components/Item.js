@@ -35,11 +35,11 @@ const Item = () => {
 
   const firstItemRef = React.useRef(null);
   React.useEffect(() => {
-    if (isFirstItem) {
-      console.log(firstItemRef.current);
+    const isFirst = isFirstItem();
+    if (isFirst) {
       firstItemRef.current.focus();
     }
-  }, []);
+  }, [isFirstItem]);
 
   return (
     <>

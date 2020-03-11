@@ -94,6 +94,7 @@ const Game = () => {
           const isFirstItem = () => i === 0;
           return (
             <ItemContext.Provider
+              key={key}
               value={{
                 isFirstItem,
                 name,
@@ -103,7 +104,7 @@ const Game = () => {
                 handleClick
               }}
             >
-              <Item key={key} />
+              <Item />
             </ItemContext.Provider>
           );
         })}

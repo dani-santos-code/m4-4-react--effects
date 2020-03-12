@@ -44,5 +44,5 @@ export const GameProvider = ({ children }) => {
 };
 
 GameProvider.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.elementType.isRequired
 };

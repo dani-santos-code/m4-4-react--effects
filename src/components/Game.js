@@ -1,21 +1,56 @@
-import React from 'react';
-import styled from 'styled-components';
+import React, { createContext, useContext } from "react";
+import styled from "styled-components";
+import { GameContext } from "./GameContext";
 
-import cookieSrc from '../cookie.svg';
+import cookieSrc from "../cookie.svg";
+import Item from "./Item";
 
-const items = [
-  { id: 'cursor', name: 'Cursor', cost: 10, value: 1 },
-  { id: 'grandma', name: 'Grandma', cost: 100, value: 10 },
-  { id: 'farm', name: 'Farm', cost: 1000, value: 80 },
-];
+import { items } from "../data";
+
+export const ItemContext = createContext(null);
 
 const Game = () => {
-  // TODO: Replace this with React state!
-  const numCookies = 100;
-  const purchasedItems = {
-    cursor: 0,
-    grandma: 0,
-    farm: 0,
+  const {
+    numCookies,
+    setNumCookies,
+    purchasedItems,
+    setPurchasedItems,
+    cookiesPerSecond
+  } = useContext(GameContext);
+
+  React.useEffect(() => {
+    document.title = `🍪${numCookies} cookies - Cookie Clicker Workshop`;
+    return () => {
+      document.title = `Cookie Clicker Workshop`;
+    };
+  }, [numCookies]);
+
+  React.useEffect(() => {
+    const handleSpaceClick = e => {
+      if (e.code === "Space") {
+        setNumCookies(numCookies + 1);
+      }
+    };
+    window.addEventListener("keydown", handleSpaceClick);
+    return () => {
+      window.removeEventListener("keydown", handleSpaceClick);
+    };
+  }, [numCookies, setNumCookies]);
+
+  const handleClick = (cost, name) => {
+    const identifier = name.toLowerCase();
+    let currentValue = purchasedItems[identifier];
+    const updatePurchasedItems = {
+      ...purchasedItems,
+      [identifier]: currentValue + 1
+    };
+    if (numCookies >= cost) {
+      setPurchasedItems(updatePurchasedItems);
+      setNumCookies(numCookies - cost);
+    } else {
+      alert("You have insufficient funds!");
+      return;
+    }
   };
 
   return (
@@ -23,17 +58,35 @@ const Game = () => {
       <GameArea>
         <Indicator>
           <Total>{numCookies} cookies</Total>
-          {/* TODO: Calcuate the cookies per second and show it here: */}
-          <strong>0</strong> cookies per second
+          <strong>{cookiesPerSecond}</strong> cookies per second
         </Indicator>
-        <Button>
+        <Button onClick={() => setNumCookies(numCookies + 1)}>
           <Cookie src={cookieSrc} />
         </Button>
       </GameArea>
 
       <ItemArea>
         <SectionTitle>Items:</SectionTitle>
-        {/* TODO: Add <Item> instances here, 1 for each item type. */}
+        {items.map(({ name, cost, value, id }, i) => {
+          const numOwned = purchasedItems[id];
+          const key = `${id}-${i}`;
+          const isFirstItem = () => i === 0;
+          return (
+            <ItemContext.Provider
+              key={key}
+              value={{
+                isFirstItem,
+                name,
+                cost,
+                value,
+                numOwned,
+                handleClick
+              }}
+            >
+              <Item />
+            </ItemContext.Provider>
+          );
+        })}
       </ItemArea>
     </Wrapper>
   );
@@ -41,17 +94,21 @@ const Game = () => {
 
 const Wrapper = styled.div`
   display: flex;
+  justify-content: center;
   height: 100vh;
+  justify-content: space-around;
 `;
 const GameArea = styled.div`
-  flex: 1;
+  /* flex: 1;*/
   display: grid;
-  place-items: center;
+  align-content: center;
+  align-self: center;
 `;
 const Button = styled.button`
   border: none;
   background: transparent;
   cursor: pointer;
+  margin-top: 100px;
 `;
 
 const Cookie = styled.img`
@@ -64,6 +121,7 @@ const ItemArea = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
+  width: 400px;
 `;
 
 const SectionTitle = styled.h3`
